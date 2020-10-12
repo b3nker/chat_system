@@ -14,6 +14,7 @@ public class ClientThread
 	extends Thread {
 	
 	private Socket clientSocket;
+	private PrintStream socOut;
 	
 	ClientThread(Socket s) {
 		this.clientSocket = s;
@@ -21,7 +22,7 @@ public class ClientThread
 
  	/**
   	* receives a request from client then sends an echo to the client
-  	* @param clientSocket the client socket
+
   	**/
 	public void run() {
     	  try {
@@ -32,12 +33,14 @@ public class ClientThread
     		while (true) {
     		  String line = socIn.readLine();
     		  socOut.println(line);
-    		  System.out.println(socIn.readLine());
+    		  System.out.println("message e : "+socIn.readLine());
     		}
     	} catch (Exception e) {
         	System.err.println("Error in EchoServer:" + e); 
         }
        }
+
+
   
   }
 

@@ -9,14 +9,19 @@ package stream;
 
 import java.io.*;
 import java.net.*;
+import java.util.LinkedList;
+import java.util.List;
 
 public class EchoServerMultiThreaded  {
-  
- 	/**
+
+	/**
   	* main method
-	* @param EchoServer port
-  	* 
+	 *
   	**/
+	private static List<ServersideClientThread> clients;
+	private static ServerThread serverTh;
+
+
        public static void main(String args[]){ 
         ServerSocket listenSocket;
         
@@ -25,18 +30,29 @@ public class EchoServerMultiThreaded  {
           System.exit(1);
   	}
 	try {
-		listenSocket = new ServerSocket(Integer.parseInt(args[0])); //port
+
+		clients = new LinkedList<ServersideClientThread>();
+		serverTh = new ServerThread(Integer.parseInt(args[0]));
+		serverTh.start();
 		System.out.println("Server ready..."); 
-		while (true) {
-			Socket clientSocket = listenSocket.accept();
-			System.out.println("Connexion from:" + clientSocket.getInetAddress());
-			ClientThread ct = new ClientThread(clientSocket);
-			ct.start();
-		}
+
         } catch (Exception e) {
             System.err.println("Error in EchoServer:" + e);
         }
       }
+
+
+      public static synchronized void envoyerMessage(String msg)
+	  {
+		  synchronized(clients){
+			  for(ServersideClientThread c : clients) {
+				  c.sendMessage(c + " : " + msg);
+			  }
+		  }
+
+
+
+	  }
   }
 
   
