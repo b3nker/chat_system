@@ -29,6 +29,7 @@ public class ServerThread
     public void run() {
         try {
             while(true) {
+                listenerSocket = new ServerSocket(port);
                 Socket client = listenerSocket.accept();
                 new ClientThread(client).start();
             }
